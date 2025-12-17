@@ -210,6 +210,7 @@ if analyze_btn:
                         ask = float(opt.get('ask', 0) or 0)
                         strike = float(opt.get('strikePrice', 0))
                         iv = float(opt.get('volatility', 0) or 0)
+                        oi = int(opt.get('openInterest', 0) or 0)
                         
                         premium = (bid + ask) / 2
                         
@@ -219,6 +220,14 @@ if analyze_btn:
                         
                         # Filter 2: Must be OTM
                         if strike <= spot_price:
+                            continue
+                        
+                        # Filter 3: Open Interest must be > 0
+                        if oi == 0:
+                            continue
+                        
+                        # Filter 4: Bid must be > 0
+                        if bid == 0:
                             continue
                         
                         # Calculate Metrics
@@ -247,7 +256,7 @@ if analyze_btn:
                             'Bid': bid,
                             'Ask': ask,
                             'Volume': opt.get('totalVolume', 0),
-                            'OI': opt.get('openInterest', 0)
+                            'OI': oi
                         })
                         
                     except (ValueError, TypeError):
